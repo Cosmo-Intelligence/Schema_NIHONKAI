@@ -1,0 +1,4 @@
+eclipse.preferences.version=1
+encoding//WEB-INF/src=MS932
+encoding//WEB-INF/src/com/yokogawa/theraris/rtWeb/app/common/constants/ServletMessage.java=MS932
+encoding//WebContent/WEB-INF/conf/rtWebSchemaConf.xml=MS932

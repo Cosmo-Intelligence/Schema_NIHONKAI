@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<rtWebSchemaConf JOB_ID="standard" desc="JOB_IDにはプロジェクト略号を設定してください">
+	<!--
+		DB接続等のための起動時遅延時間設定
+	-->
+	<startupDelay miliSec="60000" desc="起動時の遅延時間を60000-600000[miliSec]の間で設定してください"/>
+	<!--
+		ログ設定
+	-->
+	<logging>
+		<appender>
+			<class>com.yokogawa.nextas.logging.DailyRollingFileAppender</class>
+			<parameters>
+				<basePath>C:\logs</basePath>
+				<filePrefix>rtWeb_v3_</filePrefix>
+				<maxFileSize>1MB</maxFileSize>
+			</parameters>
+			<autoDelete active="Y">
+				<logStorageMonths desc="ログの保存期間を1-36ヶ月の間で設定してください">6</logStorageMonths>
+			</autoDelete>
+		</appender>
+		<logger>
+			<loglevel>FINE</loglevel>
+		</logger>
+	</logging>
+
+	<!--
+		DB接続設定
+	 -->
+	<DBINFO>
+		<!--
+		治療RISDB接続設定
+		 -->
+		<RTRISDB>
+			<Connection>jdbc:oracle:thin:@192.168.100.163:1521:RTRISV3</Connection>
+			<User>rtris</User>
+			<Password>rtris</Password>
+		</RTRISDB>
+		<MaxResults>500</MaxResults>
+	</DBINFO>
+	<!--
+		手の位置マッピング
+	-->
+	<handPosList>
+		<dataKbn handPosId="0" handPosKey="AAA" useFlg="Y"/>
+		<dataKbn handPosId="1" handPosKey="BBB" useFlg="Y"/>
+		<dataKbn handPosId="1" handPosKey="CCC" useFlg="Y"/>
+		<dataKbn handPosId="1" handPosKey="DDD" useFlg="Y"/>
+		<dataKbn handPosId="2" handPosKey="EEE" useFlg="Y"/>
+		<dataKbn handPosId="2" handPosKey="FFF" useFlg="Y"/>
+		<dataKbn handPosId="3" handPosKey="GGG" useFlg="Y"/>
+	</handPosList>
+	<!--
+		部位マッピング
+	-->
+	<buiList>
+		<dataKbn buiId="0" buiKey="HHH" useFlg="Y"/>
+		<dataKbn buiId="1" buiKey="III" useFlg="Y"/>
+		<dataKbn buiId="1" buiKey="JJJ" useFlg="Y"/>
+		<dataKbn buiId="1" buiKey="KKK" useFlg="Y"/>
+		<dataKbn buiId="2" buiKey="LLL" useFlg="Y"/>
+		<dataKbn buiId="2" buiKey="MMM" useFlg="Y"/>
+		<dataKbn buiId="3" buiKey="NNN" useFlg="Y"/>
+		<dataKbn buiId="4" buiKey="OOO" useFlg="Y"/>
+		<dataKbn buiId="5" buiKey="PPP" useFlg="Y"/>
+		<dataKbn buiId="6" buiKey="QQQ" useFlg="Y"/>
+	</buiList>
+	<!--
+		初期デフォルト値設定
+	-->
+	<defaultList>
+	<!--
+		手の位置
+	-->
+		<dataKbn defId="01" defVal="0" useFlg="Y"/>
+	<!--
+		部位区分
+	-->
+		<dataKbn defId="02" defVal="0" useFlg="Y"/>
+	</defaultList>
+	<!--
+		シェーマ画像の保存パス
+	-->
+	<schemaImgPath path="C:\WebSchema\schema"/>
+	<!--
+		「手の位置」毎のシェーマ画像設定
+	-->
+	<schemaImgNameList>
+		<dataKbn handPosId="0" fileName="手下げ.jpg" useFlg="Y"/>
+		<dataKbn handPosId="1" fileName="手胸.jpg" useFlg="Y"/>
+		<dataKbn handPosId="2" fileName="手上げ.jpg" useFlg="Y"/>
+		<dataKbn handPosId="3" fileName="その他.jpg" useFlg="Y"/>
+	</schemaImgNameList>
+	<!--
+		部位ごとのデフォルト撮影範囲の座標設定
+	-->
+	<defaultPosList>
+		<dataKbn buiId="0" startX="100" startY="100" endX="200" endY="200" useFlg="Y"/>
+		<dataKbn buiId="1" startX="110" startY="110" endX="210" endY="210" useFlg="Y"/>
+		<dataKbn buiId="2" startX="120" startY="120" endX="220" endY="220" useFlg="Y"/>
+		<dataKbn buiId="3" startX="130" startY="130" endX="230" endY="230" useFlg="Y"/>
+		<dataKbn buiId="4" startX="140" startY="140" endX="240" endY="240" useFlg="Y"/>
+		<dataKbn buiId="5" startX="150" startY="150" endX="250" endY="250" useFlg="Y"/>
+		<dataKbn buiId="6" startX="160" startY="160" endX="260" endY="260" useFlg="Y"/>
+	</defaultPosList>
+</rtWebSchemaConf>
