@@ -37,6 +37,10 @@ public class SchemaInfoBean {
 	private Date updDate;
 	/** 参照フラグ 0:変更可能 1:変更不可 */
 	private int ref;
+	//add 2025/12 yamagishi URLパラメータ変更対応 start
+	/** ユーザID */
+	private String userId;
+	//add 2025/12 yamagishi URLパラメータ変更対応 end
 	public String getPhoteSchemaUid() {
 		return photeSchemaUid;
 	}
@@ -121,5 +125,13 @@ public class SchemaInfoBean {
 	public void setRef(int ref) {
 		this.ref = ref;
 	}
+	//add 2025/12 yamagishi URLパラメータ変更対応 start
+	public String getUserId() {
+		return userId;
+	}
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+	//add 2025/12 yamagishi URLパラメータ変更対応 end
 
 }

@@ -8,8 +8,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 import javax.imageio.ImageIO;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 
 import com.yokogawa.theraris.logger.AppLogger;
 import com.yokogawa.theraris.rtWeb.app.bean.PhotoSchemaInfoBean;
@@ -21,29 +19,48 @@ import com.yokogawa.theraris.rtWeb.app.dbaccess.rtris.PhotoSchemaInfoAccess;
 import com.yokogawa.theraris.rtWeb.core.Configuration;
 import com.yokogawa.theraris.rtWeb.core.DbConnectionFactory;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
 public class RtWebServiceLogic {
 	public void search(HttpServletRequest request,HttpServletResponse res){
 		SchemaInfoBean info = new SchemaInfoBean();
 		SchemaConfBean conf = new SchemaConfBean();
-		// UID
-		String parmUid = "";
-		// 選択部位コード
-		String parmBuiCode = "";
-		// 患者Id
+		//mod 2025/12 yamagishi URLパラメータ変更対応 start
+//		// UID
+//		String parmUid = "";
+//		// 選択部位コード
+//		String parmBuiCode = "";
+//		// 位置コード
+//		String parmHandPos = "";
+		//RISID
+		String parmRisId = "";
+		// 患者ID
 		String parmKanjaId = "";
-		// 位置コード
-		String parmHandPos = "";
+		// ユーザID
+		String parmUserId = "";
 		// 参照フラグ
 		int parmRefFlag = 0;
+		
+//		// 呼び出し元画面からの遷移
+//		if (request.getParameter(Parameters.PARM_UID) != null) {
+//			parmUid = request.getParameter(Parameters.PARM_UID).trim();
+//			AppLogger.getInstance().log(AppLogger.FINE,Parameters.PARM_UID + " = " + parmUid + "'");
+//		}
+//		// 呼び出し元画面からの遷移
+//		if (request.getParameter(Parameters.PARM_BUI) != null) {
+//			parmBuiCode = request.getParameter(Parameters.PARM_BUI).trim();
+//			AppLogger.getInstance().log(AppLogger.FINE,Parameters.PARM_BUI + " = " + parmBuiCode + "'");
+//		}
+//		// 呼び出し元画面からの遷移
+//		if (request.getParameter(Parameters.PARM_HANDPOS) != null) {
+//			parmHandPos = request.getParameter(Parameters.PARM_HANDPOS).trim();
+//			AppLogger.getInstance().log(AppLogger.FINE,Parameters.PARM_HANDPOS + " = " + parmHandPos + "'");
+//		}
 		// 呼び出し元画面からの遷移
-		if (request.getParameter(Parameters.PARM_UID) != null) {
-			parmUid = request.getParameter(Parameters.PARM_UID).trim();
-			AppLogger.getInstance().log(AppLogger.FINE,Parameters.PARM_UID + " = " + parmUid + "'");
-		}
-		// 呼び出し元画面からの遷移
-		if (request.getParameter(Parameters.PARM_BUI) != null) {
-			parmBuiCode = request.getParameter(Parameters.PARM_BUI).trim();
-			AppLogger.getInstance().log(AppLogger.FINE,Parameters.PARM_BUI + " = " + parmBuiCode + "'");
+		if (request.getParameter(Parameters.PARM_RIS_ID) != null) {
+			parmRisId = request.getParameter(Parameters.PARM_RIS_ID).trim();
+			AppLogger.getInstance().log(AppLogger.FINE,Parameters.PARM_RIS_ID + " = " + parmRisId + "'");
 		}
 		// 呼び出し元画面からの遷移
 		if (request.getParameter(Parameters.PARM_KANJA_ID) != null) {
@@ -51,17 +68,19 @@ public class RtWebServiceLogic {
 			AppLogger.getInstance().log(AppLogger.FINE,Parameters.PARM_KANJA_ID + " = " + parmKanjaId + "'");
 		}
 		// 呼び出し元画面からの遷移
-		if (request.getParameter(Parameters.PARM_HANDPOS) != null) {
-			parmHandPos = request.getParameter(Parameters.PARM_HANDPOS).trim();
-			AppLogger.getInstance().log(AppLogger.FINE,Parameters.PARM_HANDPOS + " = " + parmHandPos + "'");
+		if (request.getParameter(Parameters.PARM_USER_ID) != null) {
+			parmUserId = request.getParameter(Parameters.PARM_USER_ID).trim();
+			AppLogger.getInstance().log(AppLogger.FINE,Parameters.PARM_USER_ID + " = " + parmUserId + "'");
 		}
 		// 呼び出し元画面からの遷移
 		if (request.getParameter(Parameters.PARM_REF_FLAG) != null) {
-			parmRefFlag = Integer.parseInt(request.getParameter(Parameters.PARM_REF_FLAG).trim());
+			parmRefFlag = 1;
 			AppLogger.getInstance().log(AppLogger.FINE,Parameters.PARM_REF_FLAG + " = " + parmRefFlag + "'");
 		}
 		conf = this.getConf();
-		info = this.getInfo(parmUid,parmBuiCode,parmKanjaId,parmHandPos,parmRefFlag);
+		//info = this.getInfo(parmUid,parmBuiCode,parmKanjaId,parmHandPos,parmRefFlag);
+		info = this.getInfo(parmRisId, parmKanjaId, parmUserId, parmRefFlag);
+		//mod 2025/12 yamagishi URLパラメータ変更対応 end
 		request.setAttribute("info", info);
 		request.setAttribute("conf", conf);
 	}
@@ -69,24 +88,37 @@ public class RtWebServiceLogic {
 	public void reload(HttpServletRequest request,HttpServletResponse res){
 		SchemaInfoBean info = new SchemaInfoBean();
 		SchemaConfBean conf = new SchemaConfBean();
-		// UID
-		String uid = "";
-		// 選択部位コード
-		String buiCode = "";
-		// 患者Id
+		//mod 2025/12 yamagishi URLパラメータ変更対応 start
+//		// UID
+//		String uid = "";
+//		// 選択部位コード
+//		String buiCode = "";
+//		// 位置コード
+//		String handPos = "";
+		// RISID
+		String risId = "";
+		// 患者ID
 		String kanjaId = "";
-		// 位置コード
-		String handPos = "";
+		// ユーザID
+		String userId = "";
 		// 参照フラグ
 		int parmRefFlag = 0;
-		if( request.getParameter("photoSchemaUid") !=null){
-			uid =request.getParameter("photoSchemaUid");
+//		if( request.getParameter("photoSchemaUid") !=null){
+//			uid =request.getParameter("photoSchemaUid");
+//		}
+		if( request.getParameter("risId") !=null){
+			risId =request.getParameter("risId");
 		}
-		if( request.getParameter("kanjaID") !=null){
-			kanjaId = request.getParameter("kanjaID");
+		if( request.getParameter("kanjaId") !=null){
+			kanjaId =request.getParameter("kanjaId");
+		}
+		if( request.getParameter("userId") !=null){
+			userId =request.getParameter("userId");
 		}
 		conf = this.getConf();
-		info = this.getInfo(uid,buiCode,kanjaId,handPos,parmRefFlag);
+//		info = this.getInfo(uid,buiCode,kanjaId,handPos,parmRefFlag);
+		info = this.getInfo(risId,kanjaId,userId,parmRefFlag);
+		//mod 2025/12 yamagishi URLパラメータ変更対応 end
 		request.setAttribute("info", info);
 		request.setAttribute("conf", conf);
 	}
@@ -123,25 +155,30 @@ public class RtWebServiceLogic {
 
 		return conf;
 	}
-	private SchemaInfoBean getInfo(String parmUid,String parmBuiCode,String parmKanjaId,String parmHandPos,int paramRef){
+	//mod 2025/12 yamagishi URLパラメータ変更対応 start
+//	private SchemaInfoBean getInfo(String parmUid,String parmBuiCode,String parmKanjaId,String parmHandPos,int paramRef){
+	private SchemaInfoBean getInfo(String parmRisId,String parmKanjaId,String parmUserId,int paramRef){
 		SchemaInfoBean info = new SchemaInfoBean();
 		Connection con = DbConnectionFactory.getInstance().getRTRISDBConnection();
 		try{
-			//シェーマIDの取得
-			info.setPhoteSchemaUid(parmUid);
+//			//シェーマIDの取得
+//			info.setPhoteSchemaUid(parmUid);
+			//RISIDの取得
+			info.setRisId(parmRisId);
 			//患者IDの取得
 			info.setKanjaID(parmKanjaId);
 			//データの取得
 			PhotoSchemaInfoAccess photoSchemaInfoAccess= new PhotoSchemaInfoAccess();
-			PhotoSchemaInfoBean photeSchemaBean = photoSchemaInfoAccess.select(con,info.getPhoteSchemaUid());
+//			PhotoSchemaInfoBean photeSchemaBean = photoSchemaInfoAccess.select(con,info.getPhoteSchemaUid());
+			PhotoSchemaInfoBean photeSchemaBean = photoSchemaInfoAccess.select(con,info.getRisId());
 			if(photeSchemaBean != null && photeSchemaBean.getPhoteSchemaUid() != null
 					&&  !(MyConsts.STRING_EMPTY.equals(photeSchemaBean.getPhoteSchemaUid()))){
 				//データがあった場合
 				//各データを設定する。
 				info.setPhoteSchemaUid(photeSchemaBean.getPhoteSchemaUid());
 				info.setHandPosition(photeSchemaBean.getHandPosition());
-				info.setKanjaID(photeSchemaBean.getKanjaID());
-				info.setRisId(photeSchemaBean.getRisId());
+//				info.setKanjaID(photeSchemaBean.getKanjaID());
+//				info.setRisId(photeSchemaBean.getRisId());
 				info.setSchemaBui(photeSchemaBean.getSchemaBui());
 				info.setSchemaComment(photeSchemaBean.getSchemaComment());
 				info.setSchemaImageName(photeSchemaBean.getSchemaImageName());
@@ -155,17 +192,19 @@ public class RtWebServiceLogic {
 				//データがなかった場合
 				//コンフィグデータを設定する。
 				//手の位置
-				if(parmHandPos != null && !(MyConsts.STRING_EMPTY.equals(parmHandPos))){
-					info.setHandPosition(this.getConfig(MyConsts.HAND_POS_MAP, parmHandPos));
-				}else{
-					info.setHandPosition(this.getConfig(MyConsts.DEFAULT_MAP, MyConsts.DEFAULT_MAP_HAND_POS));
-				}
+//				if(parmHandPos != null && !(MyConsts.STRING_EMPTY.equals(parmHandPos))){
+//					info.setHandPosition(this.getConfig(MyConsts.HAND_POS_MAP, parmHandPos));
+//				}else{
+//					info.setHandPosition(this.getConfig(MyConsts.DEFAULT_MAP, MyConsts.DEFAULT_MAP_HAND_POS));
+//				}
+				info.setHandPosition(this.getConfig(MyConsts.DEFAULT_MAP, MyConsts.DEFAULT_MAP_HAND_POS));
 				//部位
-				if(parmHandPos != null && !(MyConsts.STRING_EMPTY.equals(parmBuiCode))){
-					info.setSchemaBui(this.getConfig(MyConsts.BUI_MAP, parmBuiCode));
-				}else{
-					info.setSchemaBui(this.getConfig(MyConsts.DEFAULT_MAP, MyConsts.DEFAULT_MAP_BUI));
-				}
+//				if(parmHandPos != null && !(MyConsts.STRING_EMPTY.equals(parmBuiCode))){
+//					info.setSchemaBui(this.getConfig(MyConsts.BUI_MAP, parmBuiCode));
+//				}else{
+//					info.setSchemaBui(this.getConfig(MyConsts.DEFAULT_MAP, MyConsts.DEFAULT_MAP_BUI));
+//				}
+				info.setSchemaBui(this.getConfig(MyConsts.DEFAULT_MAP, MyConsts.DEFAULT_MAP_BUI));
 				info.setStartPointX(Configuration.getInstance().getDefaultPosConfBeanMap().get(info.getSchemaBui()).getStartX());
 				info.setStartPointY(Configuration.getInstance().getDefaultPosConfBeanMap().get(info.getSchemaBui()).getStartY());
 				info.setEndPointX(Configuration.getInstance().getDefaultPosConfBeanMap().get(info.getSchemaBui()).getEndX());
@@ -173,7 +212,9 @@ public class RtWebServiceLogic {
 			}
 			//デフォルト値の設定
 
+			info.setUserId(parmUserId);
 			info.setRef(paramRef);
+			//mod 2025/12 yamagishi URLパラメータ変更対応 end
 		}catch(Exception e){
 			AppLogger.getInstance().fatal("", e);
 		}finally{
@@ -234,7 +275,10 @@ public class RtWebServiceLogic {
 
 			//データの取得
 			PhotoSchemaInfoAccess photoSchemaInfoAccess= new PhotoSchemaInfoAccess();
-			PhotoSchemaInfoBean photeSchemaBean = photoSchemaInfoAccess.select(con,info.getPhoteSchemaUid());
+			//mod 2025/12 yamagishi URLパラメータ変更対応 start
+//			PhotoSchemaInfoBean photeSchemaBean = photoSchemaInfoAccess.select(con,info.getPhoteSchemaUid());
+			PhotoSchemaInfoBean photeSchemaBean = photoSchemaInfoAccess.select(con,info.getRisId());
+			//mod 2025/12 yamagishi URLパラメータ変更対応 end
 			//ファイル名の取得
 			info.setSchemaImageName(Configuration.getInstance().getSchemaImgNameMap().get(info.getHandPosition()).getName());
 			if(photeSchemaBean != null && photeSchemaBean.getPhoteSchemaUid() != null

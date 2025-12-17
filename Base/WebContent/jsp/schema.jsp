@@ -32,11 +32,13 @@ SchemaConfBean conf = (SchemaConfBean)request.getAttribute("conf");
 	<body onLoad="init()"><form action="./regist" accept-charset="UTF-8" method="post">
 	<div>
 	<input type="hidden" id="photoSchemaUid" name="photoSchemaUid" value="<%=info.getPhoteSchemaUid() %>"/>
+	<input type="hidden" id="kanjaID" name="kanjaID" value="<%=info.getKanjaID() %>"/>
+	<input type="hidden" id="risId" name="risId" value="<%=info.getRisId() %>"/>
+	<input type="hidden" id="userId" name="userId" value="<%=info.getUserId() %>"/>
 	<input type="hidden" id="startPointX" name="startPointX"/>
 	<input type="hidden" id="startPointY" name="startPointY"/>
 	<input type="hidden" id="endPointX" name="endPointX"/>
 	<input type="hidden" id="endPointY" name="endPointY"/>
-	<input type="hidden" id="kanjaID" name="kanjaID" value="<%=info.getKanjaID() %>"/>
 		<table style="border:solid 1px;">
 			<tr>
 				<td style="width:80px;border:solid 1px;height:25px;">手の位置</td>
